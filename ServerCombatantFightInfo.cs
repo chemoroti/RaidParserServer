@@ -9,6 +9,7 @@ namespace DamageParserServer
     public class ServerCombatantFightInfo
     {
         public string CombatantName { get; set; }
+        public string OpponentName { get; set; }
         public DateTime StartTime { get; set; }
         public int TotalDamage { get; set; }
         public int DPS { get; set; }

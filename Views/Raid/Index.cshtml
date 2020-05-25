@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="~/js/raid.js"></script>
+    <title>Raid</title>
+</head>
+<body>
+    <h1 id="raidIdHolder"></h1>
+    <button onclick="getRaidId()">Generate Raid Id</button>
+
+    <script>
+        console.log("hello");
+
+        function getRaidId() {
+            const xhr = new XMLHttpRequest();
+            const method = "GET";
+            const url = "https://localhost:44388/raid/GetId";
+
+            xhr.open(method, url, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    var status = xhr.status;
+                    if (status === 0 || (status >= 200 && status < 400)) {
+                        document.getElementById("raidIdHolder").innerText = "Raid Id: " + xhr.responseText;
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+    </script>
+</body>
+</html>

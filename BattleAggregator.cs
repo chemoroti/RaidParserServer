@@ -10,11 +10,16 @@ namespace DamageParserServer
 {
     public class BattleAggregator : WebSocketBehavior
     {
-        private Dictionary<string, Dictionary<string, ServerCombatantFightInfo>> Fights;
+        private Dictionary<string, Dictionary<string, ServerCombatantFightInfo>> Raids;
         public BattleAggregator()
         {
-            Fights = new Dictionary<string, Dictionary<string, ServerCombatantFightInfo>>();
-            Fights.Add("123", new Dictionary<string, ServerCombatantFightInfo>());
+            Raids = new Dictionary<string, Dictionary<string, ServerCombatantFightInfo>>();
+            AddRaid("123"); //test
+        }
+
+        public void AddRaid(string raidId)
+        {
+            Raids.Add(raidId, new Dictionary<string, ServerCombatantFightInfo>());
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -22,17 +27,17 @@ namespace DamageParserServer
             try
             {
                 ServerCombatantFightInfo fightInfo = JsonConvert.DeserializeObject<ServerCombatantFightInfo>(e.Data);
-                if (Fights.ContainsKey(fightInfo.RaidId))
+                if (Raids.ContainsKey(fightInfo.RaidId))
                 {
-                    Dictionary<string, ServerCombatantFightInfo> fight = Fights[fightInfo.RaidId];
+                    Dictionary<string, ServerCombatantFightInfo> raid = Raids[fightInfo.RaidId];
 
-                    if (!fight.ContainsKey(fightInfo.CombatantName))
+                    if (!raid.ContainsKey(fightInfo.CombatantName))
                     {
-                        fight.Add(fightInfo.CombatantName, fightInfo);
+                        raid.Add(fightInfo.CombatantName, fightInfo);
                     }
-                    fight[fightInfo.CombatantName] = fightInfo;
+                    raid[fightInfo.CombatantName] = fightInfo;
 
-                    string msg = JsonConvert.SerializeObject(fight.Values.ToList());
+                    string msg = JsonConvert.SerializeObject(raid.Values.ToList());
                     Send(msg);
                 }
             }
